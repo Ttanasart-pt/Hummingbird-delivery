@@ -35,10 +35,49 @@
             </svg>              
         </div>
 
-        <a class="userarea" href="/Hummingbird_delivery/user/account_data.html">
+        <a class="userarea" onclick="accountOverlayToggle()">
             <svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" viewBox="0 0 54 54">
                 <path id="Icon_awesome-user-alt" data-name="Icon awesome-user-alt" d="M15.141,17.034A8.517,8.517,0,1,0,6.624,8.517,8.519,8.519,0,0,0,15.141,17.034Zm7.57,1.893H19.453a10.3,10.3,0,0,1-8.623,0H7.57A7.57,7.57,0,0,0,0,26.5v.946a2.84,2.84,0,0,0,2.839,2.839h24.6a2.84,2.84,0,0,0,2.839-2.839V26.5A7.57,7.57,0,0,0,22.711,18.926Z" transform="translate(11.859 10.859)" fill="#fafafa"/>
             </svg>              
         </a>
     </div>
+
+    <div class="account-overlay" id="account-overlay">
+        <div class="account-profile">
+            <div class="profile-bg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="65.262" height="65.262" viewBox="0 0 65.262 65.262">
+                    <path id="Icon_awesome-user-alt" data-name="Icon awesome-user-alt" d="M32.631,36.71A18.355,18.355,0,1,0,14.276,18.355,18.36,18.36,0,0,0,32.631,36.71Zm16.315,4.079H41.923a22.188,22.188,0,0,1-18.584,0H16.315A16.314,16.314,0,0,0,0,57.1v2.039a6.12,6.12,0,0,0,6.118,6.118H59.143a6.12,6.12,0,0,0,6.118-6.118V57.1A16.314,16.314,0,0,0,48.946,40.789Z" fill="#fafafa"/>
+                </svg>
+            </div>
+            <div></div>
+            <div>
+                <h3>Hummingbird</h3>
+                <p>humming@mail.com</p>
+            </div>
+        </div>
+        <a class="account-menu" href="/Hummingbird_delivery/user/account_data.html">Account detail</a>
+        <a class="account-menu">Locations</a>
+        <a class="account-logout">Logout</a>
+    </div>
+
+    <div class="mode-toggle">
+        <a class="blue" href="">U<div>User view</div></a>
+        <a class="orange" href="">S<div>Counter view</div></a>
+        <a class="purple" href="">C<div>Carrier view</div></a>
+        <a class="orange" href="">W<div>Warehouse view</div></a>
+    </div>
 </div>
+
+<script>
+    const ol = document.getElementById("account-overlay");
+    function accountOverlayToggle() {
+        if(ol.style.display == "none") 
+            ol.style.display = "grid";
+    }
+
+    $(document).mouseup(function(e) {
+        if($(e.target).closest(".account-overlay").length === 0) {
+            ol.style.display = "none";
+        }
+    })
+</script>
