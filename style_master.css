@@ -6,11 +6,12 @@
 
     --accent: var(--blue);
     --text: #707070;
+    --text-light: #b5b5b5;
 
     --bg: #fafafa;
 }
 
-h1, h2, h3, h4, p, a {
+h1, h2, h3, h4, p, a, input, th, td {
     font-family: 'DM Sans', sans-serif;
 }
 
@@ -24,9 +25,14 @@ h3, h4, a {
     color: var(--accent);
 }
 
-p {
+p, input, td {
     font-weight: 400;
     color: var(--text);
+}
+
+th {
+    font-weight: 400;
+    color: var(--text-light);
 }
 
 body {
@@ -36,11 +42,49 @@ body {
     display: grid;
 }
 
+input[type = text] {
+    font-size: 120%;
+
+    width: calc(100% - 40px);
+    
+    padding: 12px 20px;
+    border-radius: 1000px;
+    outline: none;
+
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--accent);
+    box-shadow: 0px 5px 10px 0px #00000025;
+}
+
+input[type = text]:focus {
+    outline: none;
+    border-width: 2px;
+}
+
+table {
+    width: 100%;
+}
+
+th, td {
+    padding: 8px 20px;
+    width: 128px;
+
+    text-align: center
+}
+
+th:first-child, td:first-child { 
+    width: 24px; 
+}
+th:nth-child(2), td:nth-child(2) { 
+    text-align: left;
+    width: auto; 
+}
+
 .content {
-    display: display-block;
     grid-column-start: 1;
 
-    padding: 12vh 10vw;
+    padding: 12vh 16vw;
 }
 
 .header {
@@ -100,8 +144,8 @@ body {
     align-items: center;
 }
 
-.header .action {
-    width: 128px;
+.action {
+    width: auto;
     height: 50px;
 
     background-color: var(--accent);
@@ -115,7 +159,55 @@ body {
     padding: 0px 8px;
 }
 
-.header .action p {
+.action p {
     color: var(--bg);
     font-weight: 500;
+
+    padding-right: 16px;
+}
+
+.content-topic {
+    position: relative;
+    display: flex;
+    justify-content: center;
+
+    padding-bottom: 16px;
+}
+
+.content-topic a {
+    position: absolute;
+
+    top: 20px;
+    right: 0%;
+}
+
+.search-box {
+    display: flex;
+    justify-content: center;
+}
+
+.search {
+    position: relative;
+
+    width: 80%;
+}    
+
+.search button {
+    position: absolute;
+    top: 10px;
+    right: 16px;
+
+    width: 32px;
+    height: 32px;
+
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    outline: none;
+}
+
+.data-row {
+    border-radius: 1000px;
+    box-shadow: 0px 5px 10px 0px #00000025;
 }
