@@ -4,11 +4,31 @@
     --orange: #f7941d;
     --blue: #118bff;
 
-    --accent: var(--blue);
-    --text: #707070;
-    --text-light: #b5b5b5;
+    --grey-11: #111111;
+    --grey-22: #222222;
+    --grey-33: #333333;
+    --grey-70: #707070;
+    --grey-80: #808080;
+    --grey-b5: #b5b5b5;
+    --grey-aa: #aaaaaa;
+    --grey-fa: #fafafa;
+    --grey-ff: #ffffff;
 
-    --bg: #fafafa;
+    --accent: var(--blue);
+
+    /* Light mode */
+    --text: var(--grey-70);
+    --text-light: var(--grey-b5);
+
+    --bg: var(--grey-fa);
+    --pure: var(--grey-ff);
+
+    /* Dark mode */
+    --text: var(--grey-aa);
+    --text-light: var(--grey-b5);
+
+    --bg: var(--grey-22);
+    --pure: var(--grey-11);
 }
 
 h1, h2, h3, h4, p, a, input, th, td, button, textarea, select {
@@ -62,6 +82,7 @@ input[type = text], textarea {
     border-width: 1px;
     border-color: var(--accent);
     box-shadow: 0px 5px 10px 0px #00000025;
+    background-color: var(--pure);
 
     resize: none;
     overflow: hidden;
@@ -84,6 +105,8 @@ select {
     border-width: 1px;
     border-color: var(--accent);
     box-shadow: 0px 5px 10px 0px #00000025;
+
+    background-color: var(--pure);
 }
 
 table {
@@ -120,9 +143,12 @@ button[type = submit] {
     padding: 16px 24px;
 }
 
-svg {
-    fill: var(--accent);
-}
+svg { fill: var(--accent); }
+svg.bg { fill: var(--pure); }
+
+svg.stroke { stroke: var(--accent); }
+svg.stroke.bg { stroke: var(--pure); }
+svg.stroke.light { stroke-opacity: 0.15; }
 
 .content {
     grid-column-start: 1;
@@ -203,7 +229,7 @@ svg {
     padding: 16px;
     align-items: center;
 
-    background-color: white;
+    background-color: var(--pure);
     border-radius: 16px;
 
     box-shadow: 0px 5px 10px 0px #00000025;
@@ -257,7 +283,7 @@ a.account-logout {
     align-items: center;
 
     background-color: var(--blue);
-    color: var(--bg);
+    color: var(--grey-fa);
     font-size: 125%;
     font-weight: 700;
 
@@ -276,7 +302,7 @@ a.account-logout {
 
     font-size: 75%;
     text-align: left;
-    color: var(--bg);
+    color: var(--grey-fa);
     transform: translate(24px, 40px);
 }
 
@@ -322,7 +348,7 @@ a.account-logout {
     align-items: center;
 
     gap: 0px;
-    padding: 0px 16px;
+    padding: 0px 12px;
 }
 
 .action svg {
@@ -330,7 +356,7 @@ a.account-logout {
 }
 
 .action p {
-    color: var(--bg);
+    color: var(--grey-fa);
     font-weight: 500;
 
     padding: 0px;
@@ -351,7 +377,7 @@ a.account-logout {
     right: 0%;
 }
 
-.content-topic a.action.left {
+.content-topic a.action.align-left {
     right: auto;
     left: 0%;
 }
