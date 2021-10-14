@@ -28,3 +28,118 @@
 .banner.right > img { grid-column-start: 2; }
 .banner.right > div { grid-column-start: 1; }
 .banner.right > div > h1, .banner.right > div > p { text-align: right; }
+
+.result-timeline {
+    position: inherit;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.timeline-line {
+    z-index: -1;
+    position: absolute;
+    width: calc(100% - 16vw * 2);
+    height: 1px;
+
+    transform: translateY(40px);
+
+    background-color: var(--text-light);
+}
+
+.timeline-line.progress {
+    width: 0;
+    height: 1px;
+    background-color: var(--accent);
+
+    box-shadow: 0px 0px 5px 0px var(--accent);
+}
+
+.timeline-content {
+    width: 80px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.timeline-content > p {
+    text-align: center;
+}
+
+.timeline-item {
+    width: 80px;
+    height: 80px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    border-style: solid;
+    border-color: var(--accent);
+    border-width: 1px;
+
+    background-color: var(--pure);
+
+    box-shadow: 0px 5px 10px 0px #00000025;
+}
+
+.timeline-content.current .timeline-item { background-color: var(--accent); }
+.timeline-content.current .timeline-item svg { fill: var(--bg) !important; }
+
+.timeline-content.disabled .timeline-item { border-color: var(--text-light); }
+.timeline-content.disabled .timeline-item svg { fill: var(--text-light) !important; }
+
+.separator {
+    width: 60%;
+
+    border-top-style: solid;
+    border-top-color: var(--text-light);
+    border-top-width: 1px;
+}
+
+.result-table { width: 60%; }
+.result-table tr { height: 48px; }
+.result-table td { width: 50%; }
+
+.result-table td:nth-child(1) { 
+    font-weight: 500;
+    text-align: left;
+}
+
+.result-table td:nth-child(2) { 
+    text-align: right;
+}
+
+.location {
+    color: var(--text-light);
+}
+
+.package-detail {
+    width: 75%;
+
+    display: grid;
+    grid-template-columns: 160px 64px 1fr 1fr;
+    grid-template-rows: repeat(3, 56px);
+    align-items: center;
+}
+
+.package-icon {
+    grid-column-start: 1;
+    grid-row: 1 / 4;
+}
+
+.package-data-index {
+    grid-column-start: 3;
+    
+    font-weight: 500;
+    color: var(--text);
+}
+
+.package-data-value {
+    grid-column-start: 4;
+    
+    text-align: right;
+    color: var(--text);
+}

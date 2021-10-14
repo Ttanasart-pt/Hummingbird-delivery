@@ -138,8 +138,9 @@ button {
     padding: 16px 24px;
 }
 
-svg { fill: var(--accent); }
-svg.bg { fill: var(--pure); }
+svg { fill: var(--accent) !important; }
+svg.bg { fill: var(--pure) !important; }
+svg.disabled { fill: var(--text-light) !important; }
 
 svg.stroke { stroke: var(--accent); }
 svg.stroke.bg { stroke: var(--pure); }
@@ -393,7 +394,7 @@ a.account-logout {
     padding: 0px 0px 0px 4px;
 }
 
-.content-topic {
+.content-center {
     position: relative;
     display: flex;
     justify-content: center;
@@ -401,14 +402,14 @@ a.account-logout {
     padding-bottom: 16px;
 }
 
-.content-topic a.action {
+.content-center a.action {
     position: absolute;
 
     top: 20px;
     right: 0%;
 }
 
-.content-topic a.action.align-left {
+.content-center a.action.align-left {
     right: auto;
     left: 0%;
 }
