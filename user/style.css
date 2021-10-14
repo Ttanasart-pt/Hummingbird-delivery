@@ -22,7 +22,7 @@
 
 .left-item.selected {
     border-radius: 1000px;
-    background-color: white;
+    background-color: var(--pure);
     box-shadow: 0px 5px 10px 0px #00000025;
 }
 
