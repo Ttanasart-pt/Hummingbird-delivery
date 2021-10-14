@@ -27,11 +27,11 @@
     </div>
     <div class="user"> 
         <div id="action"></div>
-        <script> $(function() { $('#action').load('/Hummingbird_delivery/header/action_delivery.html'); }) </script>
+        <!-- <script> $(function() { $('#action').load('/Hummingbird_delivery/header/action_delivery.html'); }) </script> -->
 
         <div class="notification">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="29.25" viewBox="0 0 24 29.25">
-                <path id="Icon_material-notifications" data-name="Icon material-notifications" d="M18,33a3.009,3.009,0,0,0,3-3H15A3,3,0,0,0,18,33Zm9-9V16.5c0-4.6-2.46-8.46-6.75-9.48V6a2.25,2.25,0,0,0-4.5,0V7.02C11.445,8.04,9,11.88,9,16.5V24L6,27v1.5H30V27Z" transform="translate(-6 -3.75)" fill="#118bff"/>
+                <path id="Icon_material-notifications" data-name="Icon material-notifications" d="M18,33a3.009,3.009,0,0,0,3-3H15A3,3,0,0,0,18,33Zm9-9V16.5c0-4.6-2.46-8.46-6.75-9.48V6a2.25,2.25,0,0,0-4.5,0V7.02C11.445,8.04,9,11.88,9,16.5V24L6,27v1.5H30V27Z" transform="translate(-6 -3.75)"/>
             </svg>              
         </div>
 
@@ -61,10 +61,10 @@
     </div>
 
     <div class="mode-toggle">
-        <a class="blue" href="">U<div>User view</div></a>
-        <a class="orange" href="">S<div>Counter view</div></a>
-        <a class="purple" href="">C<div>Carrier view</div></a>
-        <a class="orange" href="">W<div>Warehouse view</div></a>
+        <a id="mode-u" class="blue"   onclick="setMode(this)">U<div class="blue"  >User view</div></a>
+        <a id="mode-s" class="orange" onclick="setMode(this)">S<div class="orange">Counter view</div></a>
+        <a id="mode-c" class="purple" onclick="setMode(this)">C<div class="purple">Carrier view</div></a>
+        <a id="mode-w" class="orange" onclick="setMode(this)">W<div class="orange">Warehouse view</div></a>
     </div>
 </div>
 
@@ -78,6 +78,57 @@
     $(document).mouseup(function(e) {
         if($(e.target).closest(".account-overlay").length === 0) {
             ol.style.display = "none";
+        }
+    })
+
+    function setMode(o) {
+        const d = new Date();
+        d.setTime(d.getTime() + (24*60*60*1000));
+        let e = "expires=" + d.toUTCString();
+        document.cookie = "mode=" + o.innerHTML[0] + ";" + e + ";path=/";
+
+        window.location.reload(false);
+    }
+
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i <ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ')
+                c = c.substring(1);
+            if (c.indexOf(name) == 0)
+                return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+
+    const m = getCookie("mode");
+    $(function() { 
+        let root = document.documentElement;
+        
+        switch(m) {
+            case "U": 
+                $('#action').load('/Hummingbird_delivery/header/action_delivery.html'); 
+                root.style.setProperty('--accent', 'var(--blue)');
+                $('#mode-u').addClass("toggled");
+                break;
+            case "S": 
+                $('#action').load('/Hummingbird_delivery/header/action_counter.html'); 
+                root.style.setProperty('--accent', 'var(--orange)');
+                $('#mode-s').addClass("toggled");
+                break;
+            case "C": 
+                $('#action').load('/Hummingbird_delivery/header/action_carrier.html'); 
+                root.style.setProperty('--accent', 'var(--purple)');
+                $('#mode-c').addClass("toggled");
+                break;
+            case "W": 
+                $('#action').load('/Hummingbird_delivery/header/action_warehouse.html'); 
+                root.style.setProperty('--accent', 'var(--orange)');
+                $('#mode-w').addClass("toggled");
+                break;
         }
     })
 </script>
