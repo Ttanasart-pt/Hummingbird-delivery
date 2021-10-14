@@ -31,7 +31,7 @@
     --pure: var(--grey-11);
 }
 
-h1, h2, h3, h4, p, a, input, th, td, button, textarea, select, span {
+h1, h2, h3, h4, p, a, input, th, td, button, textarea, select, span, sub {
     font-family: 'DM Sans', sans-serif;
 }
 
@@ -45,9 +45,13 @@ h3, h4, a {
     color: var(--accent);
 }
 
-p, input, td, textarea, select, span {
+p, input, td, textarea, select, span, sub {
     font-weight: 400;
     color: var(--text);
+}
+
+sub {
+    color: var(--text-light);
 }
 
 th {
@@ -346,18 +350,23 @@ a.account-logout {
     align-items: center;
 
     gap: 0px;
-    padding: 0px 12px;
+    padding: 0px 12px 0px 8px;
 }
 
 .action svg {
-    padding-right: 8px;
+    padding-left:  8px;
+    padding-right: 4px;
+}
+
+.action svg.no_lpad {
+    padding-left:  0px;
 }
 
 .action p {
     color: var(--grey-fa);
     font-weight: 500;
 
-    padding: 0px;
+    padding: 0px 0px 0px 4px;
 }
 
 .content-topic {
