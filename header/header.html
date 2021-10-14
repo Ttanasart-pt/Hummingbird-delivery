@@ -43,21 +43,35 @@
     </div>
 
     <div class="account-overlay" id="account-overlay">
-        <div class="account-profile">
-            <div class="profile-bg">
-                <svg xmlns="http://www.w3.org/2000/svg" width="65.262" height="65.262" viewBox="0 0 65.262 65.262">
-                    <path id="Icon_awesome-user-alt" data-name="Icon awesome-user-alt" d="M32.631,36.71A18.355,18.355,0,1,0,14.276,18.355,18.36,18.36,0,0,0,32.631,36.71Zm16.315,4.079H41.923a22.188,22.188,0,0,1-18.584,0H16.315A16.314,16.314,0,0,0,0,57.1v2.039a6.12,6.12,0,0,0,6.118,6.118H59.143a6.12,6.12,0,0,0,6.118-6.118V57.1A16.314,16.314,0,0,0,48.946,40.789Z" fill="#fafafa"/>
-                </svg>
-            </div>
-            <div></div>
-            <div>
-                <h3>Hummingbird</h3>
-                <p>humming@mail.com</p>
-            </div>
+        <div id="login-detail">
+            <h2 style="margin: 0px;">Login</h2>
+            <!-- <form action="login.php"> -->
+            <form onsubmit="fakeLogin()">
+                <label for="username">Username</label>
+                <input type="text" name="username" id="username">
+
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password">
+                <button type="submit">Login</button>
+            </form>
         </div>
-        <a class="account-menu" href="/Hummingbird_delivery/user/account_data.html">Account detail</a>
-        <a class="account-menu">Locations</a>
-        <a class="account-logout">Logout</a>
+        <div id="account-detail">
+            <div class="account-profile">
+                <div class="profile-bg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="65.262" height="65.262" viewBox="0 0 65.262 65.262">
+                        <path id="Icon_awesome-user-alt" data-name="Icon awesome-user-alt" d="M32.631,36.71A18.355,18.355,0,1,0,14.276,18.355,18.36,18.36,0,0,0,32.631,36.71Zm16.315,4.079H41.923a22.188,22.188,0,0,1-18.584,0H16.315A16.314,16.314,0,0,0,0,57.1v2.039a6.12,6.12,0,0,0,6.118,6.118H59.143a6.12,6.12,0,0,0,6.118-6.118V57.1A16.314,16.314,0,0,0,48.946,40.789Z" fill="#fafafa"/>
+                    </svg>
+                </div>
+                <div></div>
+                <div>
+                    <h3>Hummingbird</h3>
+                    <p>humming@mail.com</p>
+                </div>
+            </div>
+            <a class="account-menu" href="/Hummingbird_delivery/user/account_data.html">Account detail</a>
+            <a class="account-menu">Locations</a>
+            <a class="account-logout" onclick="logout()">Logout</a>
+        </div>
     </div>
 
     <div class="mode-toggle">
@@ -72,17 +86,22 @@
 </div>
 
 <script>
+    const user_mode = getCookie("mode", "U");
+    const dark = getCookie("dark", "false");
+    const user_logged_in = getCookie("user", "none");
+
     const ol = document.getElementById("account-overlay");
     function accountOverlayToggle() {
-        if(ol.style.display == "none") 
-            ol.style.display = "grid";
+        if($('#account-overlay').is(":hidden"))
+            $('#account-overlay').show();
     }
 
     $(document).mouseup(function(e) {
         if($(e.target).closest(".account-overlay").length === 0) {
-            ol.style.display = "none";
+            $('#account-overlay').hide();
         }
     })
+    $('#account-overlay').hide();
 
     function setMode(o) {
         const d = new Date();
@@ -118,33 +137,56 @@
         return fallback;
     }
 
-    const m = getCookie("mode", "U");
-    const dark = getCookie("dark", "false");
+    function fakeLogin() {
+        const d = new Date();
+        d.setTime(d.getTime() + (24*60*60*1000));
+        let e = "expires=" + d.toUTCString();
+        document.cookie = "user=1" + ";" + e + ";path=/";
+
+        window.location.reload(false);
+    }
+
+    function logout() {
+        const d = new Date();
+        d.setTime(d.getTime() - (24*60*60*1000));
+        let e = "expires=" + d.toUTCString();
+        document.cookie = "user=1" + ";" + e + ";path=/";
+
+        window.location.reload(false);
+    }
 
     $(function() { 
         let root = document.documentElement;
         
-        switch(m) {
-            case "U": 
-                $('#action').load('/Hummingbird_delivery/header/action_delivery.html'); 
-                root.style.setProperty('--accent', 'var(--blue)');
-                $('#mode-u').addClass("toggled");
-                break;
-            case "S": 
-                $('#action').load('/Hummingbird_delivery/header/action_counter.html'); 
-                root.style.setProperty('--accent', 'var(--orange)');
-                $('#mode-s').addClass("toggled");
-                break;
-            case "C": 
-                $('#action').load('/Hummingbird_delivery/header/action_carrier.html'); 
-                root.style.setProperty('--accent', 'var(--purple)');
-                $('#mode-c').addClass("toggled");
-                break;
-            case "W": 
-                $('#action').load('/Hummingbird_delivery/header/action_warehouse.html'); 
-                root.style.setProperty('--accent', 'var(--orange)');
-                $('#mode-w').addClass("toggled");
-                break;
+        if(user_logged_in != "none") {
+            $('#account-detail').show();
+            $('#login-detail').hide();
+
+            switch(user_mode) {
+                case "U": 
+                    $('#action').load('/Hummingbird_delivery/header/action_delivery.html'); 
+                    root.style.setProperty('--accent', 'var(--blue)');
+                    $('#mode-u').addClass("toggled");
+                    break;
+                case "S": 
+                    $('#action').load('/Hummingbird_delivery/header/action_counter.html'); 
+                    root.style.setProperty('--accent', 'var(--orange)');
+                    $('#mode-s').addClass("toggled");
+                    break;
+                case "C": 
+                    $('#action').load('/Hummingbird_delivery/header/action_carrier.html'); 
+                    root.style.setProperty('--accent', 'var(--purple)');
+                    $('#mode-c').addClass("toggled");
+                    break;
+                case "W": 
+                    $('#action').load('/Hummingbird_delivery/header/action_warehouse.html'); 
+                    root.style.setProperty('--accent', 'var(--orange)');
+                    $('#mode-w').addClass("toggled");
+                    break;
+            }
+        } else {
+            $('#account-detail').hide();
+            $('#login-detail').show();
         }
 
         if(dark == "true") {
@@ -154,7 +196,7 @@
             root.style.setProperty('--text-light', 'var(--grey-b5)');
 
             root.style.setProperty('--bg', 'var(--grey-22)');
-            root.style.setProperty('--pure', 'var(--grey-11)');
+            root.style.setProperty('--pure', 'var(--grey-16)');
         } else {
             $('#color').html('<svg xmlns="http://www.w3.org/2000/svg" width="16.914" height="18.925" viewBox="0 0 16.914 18.925"><path id="Icon_awesome-moon" data-name="Icon awesome-moon" d="M10.738,18.925a9.445,9.445,0,0,0,7.35-3.5.444.444,0,0,0-.427-.715A7.413,7.413,0,0,1,12.606.98a.444.444,0,0,0-.139-.822,9.463,9.463,0,1,0-1.729,18.767Z" transform="translate(-1.276 0)" fill="#fafafa"/></svg>');
 

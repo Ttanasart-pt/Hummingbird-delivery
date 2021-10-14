@@ -4,7 +4,7 @@
     --orange: #f7941d;
     --blue: #118bff;
 
-    --grey-11: #111111;
+    --grey-16: #161616;
     --grey-22: #222222;
     --grey-33: #333333;
     --grey-70: #707070;
@@ -22,16 +22,9 @@
 
     --bg: var(--grey-fa);
     --pure: var(--grey-ff);
-
-    /* Dark mode */
-    --text: var(--grey-aa);
-    --text-light: var(--grey-b5);
-
-    --bg: var(--grey-22);
-    --pure: var(--grey-11);
 }
 
-h1, h2, h3, h4, p, a, input, th, td, button, textarea, select, span, sub {
+* {
     font-family: 'DM Sans', sans-serif;
 }
 
@@ -75,7 +68,7 @@ body {
     display: grid;
 }
 
-input[type = text], input[type = number], textarea {
+input[type = text], input[type = number], input[type = password], textarea {
     width: calc(100% - 40px);
     
     padding: 12px 20px;
@@ -84,7 +77,7 @@ input[type = text], input[type = number], textarea {
 
     border-style: solid;
     border-width: 1px;
-    border-color: var(--accent);
+    border-color: var(--text-light);
     box-shadow: 0px 5px 10px 0px #00000025;
     background-color: var(--pure);
 
@@ -92,9 +85,9 @@ input[type = text], input[type = number], textarea {
     overflow: hidden;
 }
 
-input[type = text]:focus {
+input[type = text]:focus, input[type = password]:focus, input[type = number]:focus, textarea:focus {
     outline: none;
-    border-width: 2px;
+    border-color: var(--accent);
 }
 
 select {
@@ -224,17 +217,48 @@ svg.stroke.light { stroke-opacity: 0.15; }
     top: 96px;
     right: 32px;
 
-    width: 288px;
-
-    display: none;
-    grid-template-rows: 96px 48px 48px 48px;
-    padding: 16px;
-    align-items: center;
+    min-width: 288px;
 
     background-color: var(--pure);
     border-radius: 16px;
 
     box-shadow: 0px 5px 10px 0px #00000025;
+}
+
+#account-detail {
+    display: grid;
+    grid-template-rows: 96px 48px 48px 48px;
+    padding: 24px;
+    align-items: center;
+}
+
+#login-detail {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    padding: 24px;
+    justify-content: center;
+    align-items: center;
+}
+
+#login-detail > form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    justify-content: center;
+    align-items: center;
+}
+
+#login-detail label {
+    align-self: flex-start;
+    
+    color: var(--text);
+
+    transform: translateY(8px);
 }
 
 .account-profile {
