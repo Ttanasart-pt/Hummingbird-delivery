@@ -78,10 +78,10 @@
         <a id="color" style="background-color: var(--accent);" onclick="toggleDarkMode()"><div style="background-color: var(--accent);">Toggle light / dark mode</div></a>
         <div style="width: 16px;"></div>
 
-        <a id="mode-u" class="blue"   onclick="setMode(this)">U<div class="blue"  >User view</div></a>
-        <a id="mode-s" class="orange" onclick="setMode(this)">S<div class="orange">Counter view</div></a>
-        <a id="mode-c" class="purple" onclick="setMode(this)">C<div class="purple">Carrier view</div></a>
-        <a id="mode-w" class="orange" onclick="setMode(this)">W<div class="orange">Warehouse view</div></a>
+        <a id="mode-u" class="user-mode blue"   onclick="setMode(this)">U<div class="blue"  >User view</div></a>
+        <a id="mode-s" class="user-mode orange" onclick="setMode(this)">S<div class="orange">Counter view</div></a>
+        <a id="mode-c" class="user-mode purple" onclick="setMode(this)">C<div class="purple">Carrier view</div></a>
+        <a id="mode-w" class="user-mode orange" onclick="setMode(this)">W<div class="orange">Warehouse view</div></a>
     </div>
 </div>
 
@@ -160,6 +160,7 @@
         
         if(user_logged_in != "none") {
             $('#account-detail').show();
+            $('.user-mode').show();
             $('#login-detail').hide();
 
             switch(user_mode) {
@@ -186,6 +187,7 @@
             }
         } else {
             $('#account-detail').hide();
+            $('.user-mode').hide();
             $('#login-detail').show();
         }
 
