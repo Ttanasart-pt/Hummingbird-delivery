@@ -31,7 +31,7 @@
     --pure: var(--grey-11);
 }
 
-h1, h2, h3, h4, p, a, input, th, td, button, textarea, select {
+h1, h2, h3, h4, p, a, input, th, td, button, textarea, select, span {
     font-family: 'DM Sans', sans-serif;
 }
 
@@ -45,7 +45,7 @@ h3, h4, a {
     color: var(--accent);
 }
 
-p, input, td, textarea, select {
+p, input, td, textarea, select, span {
     font-weight: 400;
     color: var(--text);
 }
@@ -71,7 +71,7 @@ body {
     display: grid;
 }
 
-input[type = text], textarea {
+input[type = text], input[type = number], textarea {
     width: calc(100% - 40px);
     
     padding: 12px 20px;
@@ -131,9 +131,7 @@ th:nth-child(2), td:nth-child(2) {
 button {
     color: var(--bg);
     font-weight: 700;
-}
 
-button[type = submit] {
     background-color: var(--accent);
     border-radius: 1000px;
 
@@ -419,4 +417,15 @@ button.search  {
     grid-template-columns: 40% auto;
 
     align-items: center;
+}
+.input-area > *:not(*:first-child) { 
+    justify-self: center; 
+}
+
+.input-area.button {
+    grid-template-columns: 40% 1fr 48px;
+}
+
+.input-area.dim {
+    grid-template-columns: 40% 1fr 32px 1fr 32px 1fr 32px;
 }
