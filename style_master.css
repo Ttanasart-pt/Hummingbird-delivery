@@ -412,6 +412,8 @@ a.account-logout {
 .content-center a.action.align-left {
     right: auto;
     left: 0%;
+
+    padding: 0px 12px 0px 0px;
 }
 
 .search-box {
@@ -452,8 +454,9 @@ button.search  {
 
     align-items: center;
 }
-.input-area > *:not(*:first-child) { 
+.input-area > select:not(*:first-child) { 
     justify-self: center; 
+    width: 100%;
 }
 
 .input-area.button {

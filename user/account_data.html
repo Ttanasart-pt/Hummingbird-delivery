@@ -24,47 +24,46 @@
         </div>
 
         <div class="two-sided">
-            <div class="left">
-                <a class="left-item selected" href="">
+            <div class="left" id="left">
+                <a class="left-item" onclick="setPage(0)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
                         <path id="Icon_awesome-user-alt" data-name="Icon awesome-user-alt" d="M18,20.25A10.125,10.125,0,1,0,7.875,10.125,10.128,10.128,0,0,0,18,20.25Zm9,2.25H23.126a12.24,12.24,0,0,1-10.252,0H9a9,9,0,0,0-9,9v1.125A3.376,3.376,0,0,0,3.375,36h29.25A3.376,3.376,0,0,0,36,32.625V31.5A9,9,0,0,0,27,22.5Z" fill="#118bff"/>
                     </svg>
                     <p>Profile</p>
                 </a>
-                <a class="left-item" href="">
+                <a class="left-item" onclick="setPage(1)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="25.534" height="36.882" viewBox="0 0 25.534 36.882">
                         <path id="Icon_ionic-ios-pin" data-name="Icon ionic-ios-pin" d="M20.642,3.375c-7.048,0-12.767,5.311-12.767,11.854,0,9.22,12.767,25.028,12.767,25.028S33.409,24.449,33.409,15.229C33.409,8.686,27.69,3.375,20.642,3.375Zm0,16.925A4.158,4.158,0,1,1,24.8,16.142,4.158,4.158,0,0,1,20.642,20.3Z" transform="translate(-7.875 -3.375)" fill="#f7941d"/>
-                    </svg>                      
+                    </svg>
                     <p>Location</p>
                 </a>
             </div>
             <div></div>
-            <div class="right">
-                <div class="key-value">
-                    <p>Username</p>
-                    <p>Hummingbird</p>
-                </div>
-                <div class="key-value">
-                    <p>Password</p>
-                    <p>********</p>
-                </div>
-                <div class="key-value">
-                    <p>Full name</p>
-                    <p>Humming D. Bird</p>
-                </div>
-                <div class="key-value">
-                    <p>Phone number</p>
-                    <p>******6789</p>
-                </div>
-                <br>
-                <br>
-                <a href="" class="button">Edit</a>
-                <br>
-                <br>
-                <br>
-                <a href="" class="button red">Delete account</a>
-            </div>
+            <div class="right" id="content"></div>
         </div>
     </div>
+
+    <script> 
+        let page = 0;
+
+        function setPage(_page) {
+            page = _page;
+
+            $('#content').empty();
+            switch(page) {
+                case 0: $('#content').load('account/account_profile.html'); break;
+                case 1: $('#content').load('account/account_location.html'); break;
+            }
+
+            for(let i = 0; i < 2; i++) {
+                if(i == page)
+                    $('#left').children().eq(i).addClass("selected");
+                else
+                    $('#left').children().eq(i).removeClass("selected");  
+            }
+        }
+
+        setPage(1);
+    </script>
 </body>
 </html>
