@@ -25,7 +25,7 @@
         <div class="content-center">
             <h1>Delivery data</h1>
 
-            <a href="delivery_add.html" class="action">
+            <a href="delivery_add.php" class="action">
                 <svg class="no_lpad" xmlns="http://www.w3.org/2000/svg" width="36.843" height="36.843" viewBox="0 0 36.843 36.843">
                     <path id="Icon_ionic-ios-add-circle" data-name="Icon ionic-ios-add-circle" d="M21.8,3.375A18.422,18.422,0,1,0,40.218,21.8,18.419,18.419,0,0,0,21.8,3.375Zm8.015,19.839h-6.6v6.6a1.417,1.417,0,0,1-2.834,0v-6.6h-6.6a1.417,1.417,0,1,1,0-2.834h6.6v-6.6a1.417,1.417,0,1,1,2.834,0v6.6h6.6a1.417,1.417,0,0,1,0,2.834Z" transform="translate(-3.375 -3.375)" fill="#fafafa"/>
                 </svg>
@@ -48,21 +48,22 @@
         </div>
         <br><br>
         <div>
-            <table>
+            <table class="table">
                 <tr>
                     <th></th>
                     <th>Destination</th>
-                    <th>Package type</th>
+                    <th>Package</th>
                     <th>Status</th>
+                    <th>QR</th>
                 </tr>
+            </table>
+            <table class="table data">
                 <?php
                     $userid = 1;
-                    $q = "SELECT d.delivery_id, l.location_name, pt.name AS package_type, ds.name AS status
-                          FROM delivery d, delivery_status ds, location l, package p, package_type pt  
+                    $q = "SELECT d.delivery_id, d.package_id, l.location_name, ds.name AS status
+                          FROM delivery d, delivery_status ds, location l
                           WHERE d.sender_id = {$userid}
                             AND d.delivery_status = ds.deli_status_id
-                            AND d.package_id = p.package_id
-                            AND p.type = pt.package_type_id
                             AND d.destination = l.location_id;";
                     
                     $result = $mysqli -> query($q);
@@ -78,8 +79,13 @@
                         </svg>
                         </td>
                         <td><?php echo $row['location_name'] ?></td>
-                        <td><?php echo $row['package_type'] ?></td>
+                        <td><?php echo $row['package_id'] ?></td>
                         <td><?php echo $row['status'] ?></td>
+                        <td><a onclick="QR_set(<?php echo $row['delivery_id'] ?>)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="19.673" height="19.673" viewBox="0 0 19.673 19.673">
+                                <path id="Icon_awesome-qrcode" data-name="Icon awesome-qrcode" d="M0,10.681H8.431V2.25H0ZM2.81,5.06h2.81v2.81H2.81Zm8.431-2.81v8.431h8.431V2.25Zm5.621,5.621h-2.81V5.06h2.81ZM0,21.923H8.431V13.491H0ZM2.81,16.3h2.81v2.81H2.81Zm15.457-2.81h1.405v5.621H15.457V17.707H14.052v4.216h-2.81V13.491h4.216V14.9h2.81Zm0,7.026h1.405v1.405H18.267Zm-2.81,0h1.405v1.405H15.457Z" transform="translate(19.673 21.923) rotate(180)"/>
+                            </svg>
+                        </a></td>
                     </tr>
                 <?php } ?>
             </table>
@@ -91,7 +97,29 @@
             ?>
         </div>
     </div>
+
+    <div id="qr-show" class="overlay grey">
+        <div class="qr-block">
+            <h3>Delivery code</h3>
+            <img id="qr-image" src="" alt="" title="" />
+            <button style="margin-top: 16px;" onclick="QR_close()">Close</button>
+        </div>
+    </div>
 </body>
+
+<script>
+    function QR_set(delivery_id) {
+        $('#qr-image').attr('src', `https://api.qrserver.com/v1/create-qr-code/?data=${delivery_id}`);
+        $('#qr-show').show();
+    }
+
+    function QR_close() {
+        $('#qr-show').hide();
+        $('#qr-image').attr('src', ``);
+    }
+    QR_close();
+</script>
+
 </html>
 
 <?php $mysqli -> close(); ?>

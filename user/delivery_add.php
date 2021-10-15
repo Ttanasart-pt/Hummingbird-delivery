@@ -1,3 +1,5 @@
+<?php require_once($_SERVER['DOCUMENT_ROOT'].'/Hummingbird_delivery/connect.php'); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <link rel="stylesheet" href="/Hummingbird_delivery/style_master.css">
@@ -31,20 +33,25 @@
         </div>
         <br><br>
         <div>
-            <form action="delivery-add.php" id="delivery-add">
-                <div class="input-area">
-                    <p>Package type</p>
-                    <select name="type" id="type">
-                        <option value="mail">mail</option>
-                        <option value="object">object</option>
-                    </select>
-                </div>
-                <br>
+            <form action="delivery_adding.php" id="delivery-add" method="post">
                 <div class="input-area">
                     <p>Destination</p>
-                    <select name="destination" id="destination" onchange="locationChange(this.value)">
-                        <option value="home">Home</option>
-                        <option value="school">School</option>
+                    <select name="destination" id="destination" onchange="locationChange(this)">
+                        <option value="null" data-location-full="">---</option>
+                        <?php 
+                            $userid = 1;
+                            $q = "select * from location where user_id = {$userid};";
+
+                            if( $result = $mysqli -> query($q)) {
+                                while( $row = $result -> fetch_array()) {
+                                    echo "<option value={$row['location_id']} data-location-full='
+                                        {$row['address_1']} {$row['address_2']} {$row['state']} {$row['city']} {$row['country']} {$row['zip']}
+                                    '>{$row['location_name']}</option>";
+                                }
+                            } else {
+                                echo "<div class='error-box'>Query failed : {$mysqli -> error} </div>";
+                            }
+                        ?>
                     </select>
                 </div>
                 <div class="input-area">
@@ -54,7 +61,7 @@
                 <br>
                 <div class="input-area">
                     <p>Notes</p>
-                    <input type="text" name="notes" id="notes">
+                    <textarea name="notes" id="notes" rows="1" cols="50" oninput="auto_grow(this)"></textarea>
                 </div>
             </form>
 
@@ -68,9 +75,16 @@
     </div>
 
     <script>
-        function locationChange(val) {
-            document.getElementById("location-text").innerHTML = val;
+        function locationChange(select) {
+            document.getElementById("location-text").innerHTML = select.options[select.selectedIndex].dataset.locationFull;
+        }
+        
+        function auto_grow(element) {
+            element.style.height = "5px";
+            element.style.height = (element.scrollHeight)+"px";
         }
     </script>
 </body>
 </html>
+
+<?php $mysqli -> close(); ?>
