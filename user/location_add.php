@@ -1,3 +1,5 @@
+<?php require_once($_SERVER['DOCUMENT_ROOT'].'/Hummingbird_delivery/connect.php'); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <link rel="stylesheet" href="/Hummingbird_delivery/style_master.css">
@@ -31,12 +33,26 @@
         </div>
         <br><br>
         <div>
-            <form action="location-add.php" id="location-add">
+            <form action="location_adding.php" id="location-add" method="post">
+                <div class="input-area">
+                    <p>Name</p>
+                    <input type="text" name="name" id="name">
+                </div>
+                <br>
                 <div class="input-area">
                     <p>Location type</p>
                     <select name="type" id="type">
-                        <option value="house">House</option>
-                        <option value="condo">Condominium</option>
+                        <?php 
+                            $q = 'select * from location_type;';
+
+                            if( $result = $mysqli -> query($q)) {
+                                while( $row = $result -> fetch_array()) {
+                                    echo "<option value={$row[0]}>{$row[1]}</option>}";
+                                }
+                            } else {
+                                echo "<div class='error-box'>Query failed : {$mysqli -> error} </div>";
+                            }
+                        ?>
                     </select>
                 </div>
                 <br>
@@ -74,7 +90,7 @@
             <br><br>
 
             <div class="content-center">
-                <button type="submit" form="delivery-add">Submit</button>
+                <button type="submit" form="location-add">Submit</button>
             </div>
         </div>
     </div>
@@ -87,3 +103,5 @@
     </script>
 </body>
 </html>
+
+<?php $mysqli -> close(); ?>
