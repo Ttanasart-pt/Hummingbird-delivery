@@ -466,3 +466,16 @@ button.search  {
 .input-area.dim {
     grid-template-columns: 40% 1fr 32px 1fr 32px 1fr 32px;
 }
+
+.error-box {   
+    padding: 16px;
+
+    border-radius: 10px;
+    border-color: #ff3911;
+    border-style: solid;
+    border-width: 1px;
+
+    background-color: #ff391120;
+
+    color: var(--text);
+}
