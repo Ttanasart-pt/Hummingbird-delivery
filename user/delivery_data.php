@@ -92,7 +92,8 @@
 
             <?php
                 $count = $result -> num_rows;
-                echo "<div class='content-center'><p>Showing {$count} results.</p></div>";
+                $s = $count == 1? "" : "s";
+                echo "<div class='content-center'><p>Showing {$count} result{$s}.</p></div>";
                 $result -> free();
             ?>
         </div>
