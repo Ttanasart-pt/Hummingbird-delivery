@@ -1,5 +1,3 @@
-<?php require_once($_SERVER['DOCUMENT_ROOT'].'/Hummingbird_delivery/connect.php'); ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <link rel="stylesheet" href="/Hummingbird_delivery/style_master.css">
@@ -14,7 +12,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Location add</title>
+    <title>Create new account</title>
 </head>
 <body>
     <div id="header"></div>
@@ -22,7 +20,7 @@
 
     <div class="content">
         <div class="content-center">
-            <h1>New location</h1>
+            <h1>Create new account</h1>
 
             <a href="javascript:history.back()" class="action align-left">
                 <svg xmlns="http://www.w3.org/2000/svg" width="36.843" height="36.843" viewBox="0 0 36.843 36.843">
@@ -33,75 +31,65 @@
         </div>
         <br><br>
         <div>
-            <form action="location_adding.php" id="location-add" method="post">
+            <form action="account_creation_process.php" onsubmit="return validate()" id="register" method="post">
                 <div class="input-area">
-                    <p>Name</p>
-                    <input type="text" name="name" id="name">
+                    <p>Username</p>
+                    <input type="text" name="username" id="username">
                 </div>
                 <br>
                 <div class="input-area">
-                    <p>Location type</p>
-                    <select name="type" id="type">
-                        <?php 
-                            $q = 'select * from location_type;';
+                    <p>Email</p>
+                    <input type="text" name="email" id="email">
+                </div>
+                <br>
+                <div class="input-area">
+                    <p>Password</p>
+                    <input type="password" name="password1" id="password1">
+                </div>
+                <br>
+                <div class="input-area">
+                    <p>Retype Password</p>
+                    <input type="password" name="password2" id="password2">
+                </div>
+                <br>
 
-                            if( $result = $mysqli -> query($q)) {
-                                while( $row = $result -> fetch_array()) {
-                                    echo "<option value={$row[0]}>{$row[1]}</option>}";
-                                }
-                            } else {
-                                echo "<div class='error-box'>Query failed : {$mysqli -> error} </div>";
-                            }
-                        ?>
-                    </select>
+                <div class="input-area">
+                    <p>First name</p>
+                    <input type="text" name="fname" id="fname">
                 </div>
                 <br>
                 <div class="input-area">
-                    <p>Address 1</p>
-                    <textarea name="address_1" id="address_1" rows="1" cols="50" oninput="auto_grow(this)"></textarea>
+                    <p>Last name</p>
+                    <input type="text" name="lname" id="lname">
                 </div>
                 <br>
                 <div class="input-area">
-                    <p>Address 2</p>
-                    <textarea name="address_2" id="address_2" rows="1" cols="50" oninput="auto_grow(this)"></textarea>
+                    <p>Phone number</p>
+                    <input type="tel" name="phone" id="phone">
                 </div>
                 <br>
-                <div class="input-area">
-                    <p>State</p>
-                    <input type="text" name="state" id="state">
-                </div>
-                <br>
-                <div class="input-area">
-                    <p>City</p>
-                    <input type="text" name="city" id="city">
-                </div>
-                <br>
-                <div class="input-area">
-                    <p>Zip code</p>
-                    <input type="text" name="zip" id="zip">
-                </div>
-                <br>
-                <div class="input-area">
-                    <p>Country</p>
-                    <input type="text" name="country" id="country">
-                </div>
             </form>
             
             <br><br>
 
             <div class="content-center">
-                <button type="submit" form="location-add">Submit</button>
+                <button type="submit" form="register">Create</button>
             </div>
         </div>
     </div>
-
-    <script>
-        function auto_grow(element) {
-            element.style.height = "5px";
-            element.style.height = (element.scrollHeight)+"px";
-        }
-    </script>
 </body>
-</html>
 
-<?php $mysqli -> close(); ?>
+<script>
+    function validate() {
+        const pass        = $("#password1").val();
+        const pass_repeat = $("#password2").val();
+        
+        if(pass != pass_repeat) {
+            $("#password2").addClass("pass-not-match");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+</html>

@@ -1,3 +1,37 @@
+<?php 
+    require_once($_SERVER['DOCUMENT_ROOT'].'/Hummingbird_delivery/connect.php');
+    session_start(); 
+    $user_id    = $_SESSION["user_id"];
+    // $user_role  = $_SESSION["user_role"];
+
+    $username = "";
+    $email    = "";
+
+    if(isset($_SESSION["user_id"])) {
+        echo "<script>user_id = ".$user_id."</script>";
+
+        $q = "SELECT username, email FROM user WHERE user_id = $user_id LIMIT 1";
+        $res = $mysqli -> query($q);
+        if($res) {
+            while($user = $res -> fetch_array()) {
+                $username = $user["username"];
+                $email    = $user["email"];
+            } 
+        } else {
+            echo "<script>console.log('User query error ".$mysqli->error."')</script>";
+        }
+    } else
+        echo "<script>user_id = -1</script>";
+
+    // switch($user_role) {
+    //     case 0 : $user_mode = "U"; break;
+    //     case 1 : $user_mode = "S"; break;
+    //     case 2 : $user_mode = "C"; break;
+    //     case 3 : $user_mode = "W"; break;
+    // }
+    // echo "<script>user_mode = '".$user_mode."'</script>";
+?>
+
 <div class="header">
     <div class="menu">
         <a href="/Hummingbird_delivery/pricing.html">Pricing</a>
@@ -46,13 +80,19 @@
         <div id="login-detail">
             <h2 style="margin: 0px;">Login</h2>
             <!-- <form action="login.php"> -->
-            <form onsubmit="fakeLogin()">
-                <label for="username">Username</label>
-                <input type="text" name="username" id="username">
+            <form action="/Hummingbird_delivery/header/login_process.php" method="post">
+                <div style="width: 100%;">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" id="username">
+                </div>
 
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password">
+                <div style="width: 100%;">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password">
+                </div>
+
                 <button type="submit">Login</button>
+                <a href="/Hummingbird_delivery/user/account_creation.php">Create new account</a>
             </form>
         </div>
         <div id="account-detail">
@@ -64,18 +104,18 @@
                 </div>
                 <div></div>
                 <div>
-                    <h3>Hummingbird</h3>
-                    <p>humming@mail.com</p>
+                    <h3><?php echo $username; ?></h3>
+                    <p><?php echo $email; ?></p>
                 </div>
             </div>
             <a class="account-menu" href="/Hummingbird_delivery/user/account_data.html">Account detail</a>
             <a class="account-menu">Locations</a>
-            <a class="account-logout" onclick="logout()">Logout</a>
+            <a class="account-logout" href="/Hummingbird_delivery/header/logout_process.php">Logout</a>
         </div>
     </div>
 
     <div class="mode-toggle">
-        <a id="color" style="background-color: var(--accent);" onclick="toggleDarkMode()"><div style="background-color: var(--accent);">Toggle light / dark mode</div></a>
+        <a id="color" onclick="toggleDarkMode()"><div style="background-color: var(--accent);">Toggle light / dark mode</div></a>
         <div style="width: 16px;"></div>
 
         <a id="mode-u" class="user-mode blue"   onclick="setMode(this)">U<div class="blue"  >User view</div></a>
@@ -86,9 +126,8 @@
 </div>
 
 <script>
-    const user_mode = getCookie("mode", "U");
     const dark = getCookie("dark", "false");
-    const user_logged_in = getCookie("user", "none");
+    user_mode  = getCookie("mode", "U");
 
     const ol = document.getElementById("account-overlay");
     function accountOverlayToggle() {
@@ -137,28 +176,10 @@
         return fallback;
     }
 
-    function fakeLogin() {
-        const d = new Date();
-        d.setTime(d.getTime() + (24*60*60*1000));
-        let e = "expires=" + d.toUTCString();
-        document.cookie = "user=1" + ";" + e + ";path=/";
-
-        window.location.reload(false);
-    }
-
-    function logout() {
-        const d = new Date();
-        d.setTime(d.getTime() - (24*60*60*1000));
-        let e = "expires=" + d.toUTCString();
-        document.cookie = "user=1" + ";" + e + ";path=/";
-
-        window.location.reload(false);
-    }
-
-    $(function() { 
+    function init_user() { 
         let root = document.documentElement;
         
-        if(user_logged_in != "none") {
+        if(user_id != -1) {
             $('#account-detail').show();
             $('.user-mode').show();
             $('#login-detail').hide();
@@ -192,7 +213,8 @@
         }
 
         if(dark == "true") {
-            $('#color').html('<svg xmlns="http://www.w3.org/2000/svg" width="22" height="21.9" viewBox="0 0 22 21.9"><path id="Icon_material-wb-sunny" data-name="Icon material-wb-sunny" d="M6.76,4.84,4.96,3.05,3.55,4.46,5.34,6.25ZM4,10.5H1v2H4ZM13,.55H11V3.5h2V.55Zm7.45,3.91L19.04,3.05,17.25,4.84l1.41,1.41Zm-3.21,13.7,1.79,1.8,1.41-1.41-1.8-1.79-1.4,1.4ZM20,10.5v2h3v-2Zm-8-5a6,6,0,1,0,6,6A6,6,0,0,0,12,5.5ZM11,22.45h2V19.5H11ZM3.55,18.54l1.41,1.41,1.79-1.8L5.34,16.74Z" transform="translate(-1 -0.55)" fill="#fafafa"/></svg>');
+            $('#color').html('<svg style="fill: var(--grey-fa) !important;" xmlns="http://www.w3.org/2000/svg" width="22" height="21.9" viewBox="0 0 22 21.9"><path id="Icon_material-wb-sunny" data-name="Icon material-wb-sunny" d="M6.76,4.84,4.96,3.05,3.55,4.46,5.34,6.25ZM4,10.5H1v2H4ZM13,.55H11V3.5h2V.55Zm7.45,3.91L19.04,3.05,17.25,4.84l1.41,1.41Zm-3.21,13.7,1.79,1.8,1.41-1.41-1.8-1.79-1.4,1.4ZM20,10.5v2h3v-2Zm-8-5a6,6,0,1,0,6,6A6,6,0,0,0,12,5.5ZM11,22.45h2V19.5H11ZM3.55,18.54l1.41,1.41,1.79-1.8L5.34,16.74Z" transform="translate(-1 -0.55)"/></svg>');
+            $('#color').css('background-color','var(--orange)');
 
             root.style.setProperty('--text', 'var(--grey-aa)');
             root.style.setProperty('--text-light', 'var(--grey-b5)');
@@ -200,7 +222,8 @@
             root.style.setProperty('--bg', 'var(--grey-22)');
             root.style.setProperty('--pure', 'var(--grey-16)');
         } else {
-            $('#color').html('<svg xmlns="http://www.w3.org/2000/svg" width="16.914" height="18.925" viewBox="0 0 16.914 18.925"><path id="Icon_awesome-moon" data-name="Icon awesome-moon" d="M10.738,18.925a9.445,9.445,0,0,0,7.35-3.5.444.444,0,0,0-.427-.715A7.413,7.413,0,0,1,12.606.98a.444.444,0,0,0-.139-.822,9.463,9.463,0,1,0-1.729,18.767Z" transform="translate(-1.276 0)" fill="#fafafa"/></svg>');
+            $('#color').html('<svg style="fill: var(--grey-fa) !important;" xmlns="http://www.w3.org/2000/svg" width="16.914" height="18.925" viewBox="0 0 16.914 18.925"><path id="Icon_awesome-moon" data-name="Icon awesome-moon" d="M10.738,18.925a9.445,9.445,0,0,0,7.35-3.5.444.444,0,0,0-.427-.715A7.413,7.413,0,0,1,12.606.98a.444.444,0,0,0-.139-.822,9.463,9.463,0,1,0-1.729,18.767Z" transform="translate(-1.276 0)"/></svg>');
+            $('#color').css('background-color','var(--purple)');
 
             root.style.setProperty('--text', 'var(--grey-70)');
             root.style.setProperty('--text-light', 'var(--grey-b5)');
@@ -208,5 +231,10 @@
             root.style.setProperty('--bg', 'var(--grey-fa)');
             root.style.setProperty('--pure', 'var(--grey-ff)');
         }
-    })
+    }
 </script>
+
+<?php
+    echo "<script>init_user();</script>";
+    $mysqli -> close();
+?>

@@ -19,7 +19,7 @@
 
 <body>
     <div id="header"></div>
-    <script> $(function() { $('#header').load('/Hummingbird_delivery/header/header.html'); }) </script>
+    <script> $(function() { $('#header').load('/Hummingbird_delivery/header/header.php'); }) </script>
 
     <div class="content">
         <div class="content-center">
