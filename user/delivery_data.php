@@ -10,6 +10,7 @@
 
 <head>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="/Hummingbird_delivery/header/color.js"></script>
 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
