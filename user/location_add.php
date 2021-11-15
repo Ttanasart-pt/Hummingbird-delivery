@@ -34,7 +34,7 @@
         </div>
         <br><br>
         <div>
-            <form action="location_adding.php" id="location-add" method="post">
+            <form action="location_add_process.php" id="location-add" method="post">
                 <div class="input-area">
                     <p>Name</p>
                     <input type="text" name="name" id="name">

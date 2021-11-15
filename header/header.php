@@ -1,13 +1,11 @@
 <?php 
     require_once($_SERVER['DOCUMENT_ROOT'].'/Hummingbird_delivery/connect.php');
-    session_start(); 
-    $user_id    = $_SESSION["user_id"];
-    // $user_role  = $_SESSION["user_role"];
 
     $username = "";
     $email    = "";
-
-    if(isset($_SESSION["user_id"])) {
+    if($_COOKIE["islogin"]) {
+        session_start();
+        $user_id    = $_SESSION["user_id"];
         echo "<script>user_id = ".$user_id."</script>";
 
         $q = "SELECT username, email FROM user WHERE user_id = $user_id LIMIT 1";
@@ -20,8 +18,10 @@
         } else {
             echo "<script>console.log('User query error ".$mysqli->error."')</script>";
         }
-    } else
+    } else {
         echo "<script>user_id = -1</script>";
+    }
+    // $user_role  = $_SESSION["user_role"];
 
     // switch($user_role) {
     //     case 0 : $user_mode = "U"; break;
@@ -96,6 +96,9 @@
             </form>
         </div>
         <div id="account-detail">
+            <?php
+                
+            ?>
             <div class="account-profile">
                 <div class="profile-bg">
                     <svg xmlns="http://www.w3.org/2000/svg" width="65.262" height="65.262" viewBox="0 0 65.262 65.262">

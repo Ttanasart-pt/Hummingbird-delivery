@@ -1,6 +1,7 @@
 <?php
+    session_start();
     require_once($_SERVER['DOCUMENT_ROOT'].'/Hummingbird_delivery/connect.php');
-    $userid = 1;
+    $userid = $_SESSION['user_id'];
     $name   = $_POST['name'];
     $type   = $_POST['type'];
     $add1   = $_POST['address_1'];

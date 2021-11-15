@@ -31,6 +31,8 @@
             }
             if(!$start) {
                 header("Location: /Hummingbird_delivery/index.html");
+            } else {
+                setcookie("islogin", true);
             }
         }
     }

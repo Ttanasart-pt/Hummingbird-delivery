@@ -1,4 +1,8 @@
-<?php require_once($_SERVER['DOCUMENT_ROOT'].'/Hummingbird_delivery/connect.php'); ?>
+<?php 
+    session_start();
+    require_once($_SERVER['DOCUMENT_ROOT'].'/Hummingbird_delivery/connect.php'); 
+    $userid = $_SESSION['user_id'];
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -34,13 +38,12 @@
         </div>
         <br><br>
         <div>
-            <form action="delivery_adding.php" id="delivery-add" method="post">
+            <form action="delivery_add_process.php" id="delivery-add" method="post">
                 <div class="input-area">
                     <p>Destination</p>
                     <select name="destination" id="destination" onchange="locationChange(this)">
                         <option value="null" data-location-full="">---</option>
                         <?php 
-                            $userid = 1;
                             $q = "select * from location where user_id = {$userid};";
 
                             if( $result = $mysqli -> query($q)) {
@@ -62,7 +65,7 @@
                 <br>
                 <div class="input-area">
                     <p>Notes</p>
-                    <textarea name="notes" id="notes" rows="1" cols="50" oninput="auto_grow(this)"></textarea>
+                    <textarea name="note" id="note" rows="1" cols="50" oninput="auto_grow(this)"></textarea>
                 </div>
             </form>
 
