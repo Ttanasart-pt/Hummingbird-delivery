@@ -1,3 +1,7 @@
+<?php 
+    require_once($_SERVER['DOCUMENT_ROOT'].'/Hummingbird_delivery/connect.php'); 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <link rel="stylesheet" href="/Hummingbird_delivery/style_master.css">

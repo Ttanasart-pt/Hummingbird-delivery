@@ -179,7 +179,7 @@
                     $('#mode-u').addClass("toggled");
                     break;
                 case "S": 
-                    $('#action').load('/Hummingbird_delivery/header/action_counter.html'); 
+                    $('#action').load('/Hummingbird_delivery/header/action_package_add.html'); 
                     root.style.setProperty('--accent', 'var(--orange)');
                     $('#mode-s').addClass("toggled");
                     break;
