@@ -1,5 +1,14 @@
 <?php 
     require_once($_SERVER['DOCUMENT_ROOT'].'/Hummingbird_delivery/connect.php');
+
+    if(isset($_GET['delivery_id'])) {
+        $id = $_GET['delivery_id'];
+        $q = "CALL CourierGetPackage($id);";
+        $res = $mysqli -> query($q);
+        if(!$res) {
+            echo $mysqli->error;
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -71,7 +80,8 @@
     }
 
     function onScanSuccess(decodedText, decodedResult) {
-        console.log(`Code scanned = ${decodedText}`, decodedResult);
+        // console.log(`Code scanned = ${decodedText}`, decodedResult);
+        window.location.href = `/Hummingbird_delivery/employee/carrier/carrier_manager.php?delivery_id=${decodedText}`;
     }
 
     var html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: 250 });
