@@ -3,7 +3,7 @@
 
     if(isset($_GET['delivery_id'])) {
         $id = $_GET['delivery_id'];
-        $q = "CALL CourierGetPackage($id);";
+        $q = "CALL CourierGetPackage($id, 2);";
         $res = $mysqli -> query($q);
         if(!$res) {
             echo $mysqli->error;

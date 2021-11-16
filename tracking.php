@@ -1,3 +1,38 @@
+<?php 
+    session_start();
+    require_once($_SERVER['DOCUMENT_ROOT'].'/Hummingbird_delivery/connect.php');
+
+    if(isset($_GET['delivery_id'])) {
+        $delivery_id = $_GET['delivery_id'];
+        $p_type = "";
+        $p_w = 200;
+        $p_h = 200;
+        $p_d = 200;
+        $p_weight = 100;
+        $status = -1;
+
+        $q = "SELECT pt.name, p.dim_w, p.dim_h, p.dim_d, p.weight, d.delivery_status FROM package p, package_type pt, delivery d 
+            WHERE d.delivery_id = {$delivery_id} AND
+            p.type = pt.package_type_id AND
+            d.package_id = p.package_id LIMIT 1";
+        $res = $mysqli -> query($q);
+        if($res) {
+            while($package = $res->fetch_array()) {
+                $p_type = $package['name'];
+                $p_w = $package['dim_w'];
+                $p_h = $package['dim_h'];
+                $p_d = $package['dim_d'];
+                $p_weight = $package['weight'];
+                $status = $package['delivery_status'];
+            }
+        } else {
+            echo $mysqli->error;
+        }
+    } else {
+        $delivery_id = "";
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <link rel="stylesheet" href="/Hummingbird_delivery/style_master.css">
@@ -9,6 +44,9 @@
 <head>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="/Hummingbird_delivery/header/color.js"></script>
+
+    <script src="/Hummingbird_delivery/3d/three.js"></script>
+    <script src="/Hummingbird_delivery/3d/box.js"></script>
 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -25,8 +63,8 @@
         </div>
 
         <div class="search-box">
-            <form action="delivery-search.php" class="search" id="search">
-                <input type="text" name="search_qury" id="delivery-search" placeholder="Delivery ID">
+            <form action="./tracking.php" method="get" class="search" id="search">
+                <input type="text" name="delivery_id" id="delivery_id" placeholder="Delivery ID" value="<?php echo $delivery_id; ?>">
             </form>
             <button class="search" type="submit" form="search" value="submit">
                 <svg xmlns="http://www.w3.org/2000/svg" width="23.513" height="23.513" viewBox="0 0 23.513 23.513">
@@ -39,11 +77,20 @@
         </div>
 
         <br><br>
-        <div id="result" class="flex-center">
+        <?php 
+            echo '<div class="content-center">';
+            if($delivery_id == "") {
+                echo '<p>Enter delivery id to track</p>';
+            } else if($status == -1) {
+                echo '<p>Delivery not found</p>';
+            }
+            echo '</div>';
+        ?>
+
+        <div id="result" class="flex-center" <?php if($delivery_id == "" || $status == -1) echo 'style="display: none;"'; ?>>
             <div class="content-center">
                 <h1>Result</h1>
             </div>
-
             <div class="result-timeline" id="timeline">
                 <div class="timeline-line"></div>
                 <div class="timeline-line progress" id="progress-line"></div>
@@ -93,6 +140,18 @@
                     <p>Destination Reached</p>
                 </div>
             </div>
+            <?php 
+                $display_stat = 0;
+                switch($status) {
+                    case 1 : $display_stat = 0; break;
+                    case 2 : $display_stat = 1; break;
+                    case 3 : $display_stat = 2; break;
+                    case 4 : $display_stat = 3; break;
+                    case 5 : $display_stat = 4; break;
+                    default : $display_stat = -1;
+                }
+                echo '<script>setTimeline('.$display_stat.');</script>';
+            ?>
             <br>
             <div class="content-center">
                 <div class="separator"></div>
@@ -100,45 +159,49 @@
             
             <div class="content-center">
                 <table class="result-table">
-                    <tr>
-                        <td>Delivery created</td>
-                        <td>12 June 2021</td>
-                    </tr>
-                    <tr>
-                        <td>Package received</td>
-                        <td>12 June 2021<br><span class="location">HBstation Bang Na</span></td>
-                    </tr>
+                    <?php
+                        $q = "SELECT de.time, et.name FROM delivery_events de JOIN event_type et ON de.event_type = et.event_type_id WHERE delivery_id = {$delivery_id} ORDER BY time ASC;";
+                        $res = $mysqli -> query($q);
+                        if($res) {
+                            while($d_event = $res -> fetch_array()) {
+                                echo '<tr>';
+                                echo '    <td>'.$name.'</td>';
+                                echo '    <td>'.$time.'</td>';
+                                echo '</tr>';
+                            }
+                        } else {
+                            echo $mysqli -> error;
+                        }
+                    ?>
                 </table>
             </div>
-        </div>
-        <br>
-        <div id="result" class="flex-center">
+
+            <br>
+
             <div class="content-center">
                 <h1>Package</h1>
             </div>
-
+            
             <div class="content-center">
                 <div class="package-detail">
-                    <div class="package-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="159.888" height="178.197" viewBox="0 0 159.888 178.197">
-                            <g id="Icon_feather-box" data-name="Icon feather-box" transform="translate(-3 -1.306)">
-                              <path id="Path_7" data-name="Path 7" d="M161.388,125.01V55.281A17.432,17.432,0,0,0,152.672,40.2L91.66,5.339a17.432,17.432,0,0,0-17.432,0L13.216,40.2A17.432,17.432,0,0,0,4.5,55.281V125.01a17.432,17.432,0,0,0,8.716,15.079l61.012,34.864a17.432,17.432,0,0,0,17.432,0l61.012-34.864A17.432,17.432,0,0,0,161.388,125.01Z" transform="translate(0 0)" fill="none" stroke="#f7941d" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
-                              <path id="Path_8" data-name="Path 8" d="M4.9,10.44,81,54.456,157.087,10.44" transform="translate(1.948 35.777)" fill="none" stroke="#f7941d" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
-                              <path id="Path_9" data-name="Path 9" d="M18,105.858V18" transform="translate(64.944 72.145)" fill="none" stroke="#f7941d" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
-                            </g>
-                        </svg>
-                    </div>
+                    <div id="preview" class="package-icon"></div>
+                    <script>const cube = generatePreview("preview", 160, 160);</script>
+                    <?php echo '<script>cube.scale.x = '.$p_w.';
+                                        cube.scale.y = '.$p_h.';
+                                        cube.scale.z = '.$p_d.';</script>'; ?>
+
                     <div class="package-data-index">Package type</div>
-                    <div class="package-data-value">Object</div>
+                    <div class="package-data-value"><?php echo $p_type; ?></div>
 
                     <div class="package-data-index">Box dimension</div>
-                    <div class="package-data-value">140 * 160 * 160 mm</div>
+                    <div class="package-data-value"><?php echo $p_w." * ".$p_h." * ".$p_d; ?>mm</div>
 
                     <div class="package-data-index">Box weight</div>
-                    <div class="package-data-value">680 g</div>
+                    <div class="package-data-value"><?php echo $p_weight; ?> g</div>
                 </div>
             </div>
         </div>
+        <br>
     </div>
 </body>
 
@@ -154,6 +217,7 @@
 
         $('#progress-line').css('width', `calc((100% - 16vw * 2) / 4 * ${stage})`);
     }
-    setTimeline(1);
 </script>
 </html>
+
+<?php $mysqli -> close(); ?>
