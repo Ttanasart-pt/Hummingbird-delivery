@@ -68,7 +68,6 @@
     <title>Tracking</title>
 </head>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=<>&callback=initMap&libraries=&v=weekly" async></script>
 <script>
     locations = [];
     function initMap() {
@@ -85,6 +84,7 @@
         }
     }
 </script>
+<script type='text/javascript' src='./key.js'></script>
 
 <body>
     <div id="header"></div>
