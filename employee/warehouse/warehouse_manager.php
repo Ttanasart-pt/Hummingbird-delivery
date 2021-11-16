@@ -122,14 +122,14 @@
 
                     $q = "SELECT d.delivery_id, p.package_id, p.dim_w, p.dim_h, p.dim_d, getlocation(d.destination) as destination 
                     FROM delivery d, package p 
-                    WHERE d.package_id = p.package_id AND p.status = 3
+                    WHERE d.package_id = p.package_id AND d.delivery_status = 3
                         AND (LOWER(destination) LIKE '%$filter%'
                         OR LOWER(d.package_id) LIKE '%$filter%')
                       ORDER BY d.creation_date DESC;";
                 } else {
                     $q = "SELECT d.delivery_id, p.package_id, p.dim_w, p.dim_h, p.dim_d, getlocation(d.destination) as destination 
                         FROM delivery d, package p 
-                        WHERE d.package_id = p.package_id AND p.status = 3;";
+                        WHERE d.package_id = p.package_id AND d.delivery_status = 3;";
                 }
                 $res = $mysqli -> query($q);
                 if($res) {

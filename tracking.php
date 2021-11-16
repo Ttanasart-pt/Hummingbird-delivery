@@ -48,11 +48,44 @@
     <script src="/Hummingbird_delivery/3d/three.js"></script>
     <script src="/Hummingbird_delivery/3d/box.js"></script>
 
+    <script>
+        function setTimeline(stage) {
+            for(let i = 0; i < 5; i++) {
+                if(i == stage) {
+                    $('#timeline').children().eq(2 + i).addClass("current");
+                } else if(i > stage) {
+                    $('#timeline').children().eq(2 + i).addClass("disabled");
+                }
+            }
+
+            $('#progress-line').css('width', `calc((100% - 16vw * 2) / 4 * ${stage})`);
+        }
+    </script>
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tracking</title>
 </head>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBNheFmGWcWT5l_AsZlKLZX_OoMiO03StU&callback=initMap&libraries=&v=weekly" async></script>
+<script>
+    locations = [];
+    function initMap() {
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 4,
+            center: { lat: locations[0][0], lng: locations[0][1] }
+        });
+        
+        for (i = 0; i < locations.length; i++) {
+            const marker = new google.maps.Marker({
+                position: { lat: locations[i][0], lng: locations[i][1]},
+                map: map
+            });
+        }
+    }
+</script>
+
 <body>
     <div id="header"></div>
     <script> $(function() { $('#header').load('header/header.php'); }) </script>
@@ -91,6 +124,12 @@
             <div class="content-center">
                 <h1>Result</h1>
             </div>
+
+            <div class="content-center">
+                <div id="map" style="width: 60vw; height: 450px;"></div>
+            </div>
+            
+            <br><br>
             <div class="result-timeline" id="timeline">
                 <div class="timeline-line"></div>
                 <div class="timeline-line progress" id="progress-line"></div>
@@ -160,14 +199,16 @@
             <div class="content-center">
                 <table class="result-table">
                     <?php
-                        $q = "SELECT de.time, et.name FROM delivery_events de JOIN event_type et ON de.event_type = et.event_type_id WHERE delivery_id = {$delivery_id} ORDER BY time ASC;";
+                        $q = "SELECT de.time, et.name, de.event_location_lat as lat, de.event_location_lng as lng FROM delivery_events de JOIN event_type et ON de.event_type = et.event_type_id WHERE delivery_id = {$delivery_id} ORDER BY time ASC;";
                         $res = $mysqli -> query($q);
                         if($res) {
                             while($d_event = $res -> fetch_array()) {
                                 echo '<tr>';
-                                echo '    <td>'.$name.'</td>';
-                                echo '    <td>'.$time.'</td>';
+                                echo '    <td>'.$d_event["name"].'</td>';
+                                echo '    <td>'.$d_event["time"].'</td>';
                                 echo '</tr>';
+                                
+                                echo "<script>locations.push([".$d_event["lat"].",".$d_event["lng"]."])</script>";
                             }
                         } else {
                             echo $mysqli -> error;
@@ -205,19 +246,6 @@
     </div>
 </body>
 
-<script>
-    function setTimeline(stage) {
-        for(let i = 0; i < 5; i++) {
-            if(i == stage) {
-                $('#timeline').children().eq(2 + i).addClass("current");
-            } else if(i > stage) {
-                $('#timeline').children().eq(2 + i).addClass("disabled");
-            }
-        }
-
-        $('#progress-line').css('width', `calc((100% - 16vw * 2) / 4 * ${stage})`);
-    }
-</script>
 </html>
 
 <?php $mysqli -> close(); ?>

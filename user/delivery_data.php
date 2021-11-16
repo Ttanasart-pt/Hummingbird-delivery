@@ -94,7 +94,7 @@
                         echo '<td></td>';
                         echo '<td></td>';
                         echo '<td>'.$destination.'</td>';
-                        echo '<td><a>Track</a></td>';
+                        echo '<td><a href="../tracking.php?delivery_id='.$delivery_id.'">Track</a></td>';
                         if($status != 'delivered' && $status != 'canceled')
                             echo '<td><a href="./delivery_cancel_process.php?delivery_id='.$delivery_id.'" style="font-size: 100%;color: var(--grey-ff);background-color: var(--red);padding: 8px 20px;border-radius: 100px;">Cancel</a></td>';
                         echo '</tr>';
