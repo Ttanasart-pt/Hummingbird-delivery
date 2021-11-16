@@ -4,7 +4,7 @@
     if($mysqli->connect_errno) {
         echo "<script>history.go(-1);</scprit>";
     } else {
-        $username = $_POST['username'];
+        $email    = $_POST['email'];
         $password = $_POST['password'];
 
         $salt = '';
@@ -13,8 +13,7 @@
         if($res) while($ret = $res -> fetch_array()) $salt = $ret['salt'];
         $pass = hash("sha256", "$password$salt");
 
-        echo $pass;
-        $q   = "SELECT user_id FROM user WHERE username = '$username' AND password = '$pass' LIMIT 1";
+        $q   = "SELECT user_id FROM user WHERE email = '$email' AND password = '$pass' LIMIT 1";
         $res = $mysqli -> query($q);
 
         if(!$res){

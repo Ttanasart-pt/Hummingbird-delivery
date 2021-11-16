@@ -82,8 +82,8 @@
             <!-- <form action="login.php"> -->
             <form action="/Hummingbird_delivery/header/login_process.php" method="post">
                 <div style="width: 100%;">
-                    <label for="username">Username</label>
-                    <input type="text" name="username" id="username">
+                    <label for="email">Email</label>
+                    <input type="text" name="email" id="email">
                 </div>
 
                 <div style="width: 100%;">

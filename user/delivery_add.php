@@ -71,7 +71,6 @@
 
             <br><br>
             
-
             <div class="content-center">
                 <button type="submit" form="delivery-add">Submit</button>
             </div>
