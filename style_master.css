@@ -461,14 +461,19 @@ button.search  {
     width: 24px; 
 }
 
-/* destination column */
+/* ID column */
 .table th:nth-child(2), td:nth-child(2) { 
+    width: 24px; 
+}
+
+/* destination column */
+.table th:nth-child(3), td:nth-child(3) { 
     text-align: left;
     width: auto; 
 }
 
 /* action icon */
-.table th:nth-child(5), td:nth-child(5) { 
+.table th:nth-child(6), td:nth-child(6) { 
     width: 24px; 
 }
 

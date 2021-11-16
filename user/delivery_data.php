@@ -62,36 +62,50 @@
             <table class="table">
                 <tr>
                     <th></th>
+                    <th>ID</th>
                     <th>Destination</th>
                     <th>Package</th>
                     <th>Status</th>
                     <th>QR</th>
                 </tr>
             </table>
-            <table class="table data">
+            <table class="table data" id="delivery-table">
                 <?php
-                    function generateDelivery($name, $id, $status) {
+                    function generateDelivery($name, $delivery_id, $package_id, $status, $destination) {
+                        static $index = 1;
                         echo '<tr class="data-row">';
-                        echo '<td><svg xmlns="http://www.w3.org/2000/svg" width="28.779" height="20.145" viewBox="0 0 28.779 20.145">';
+                        echo '<td><a onclick="toggleContent('.$index.')"><svg xmlns="http://www.w3.org/2000/svg" width="28.779" height="20.145" viewBox="0 0 28.779 20.145">';
                         echo '    <path id="Icon_awesome-box-open" data-name="Icon awesome-box-open" ';
                         echo '        d="M19.14,12.321a2.18,2.18,0,0,1-1.862-1.052L14.388,6.476,11.5,11.269a2.187,2.187,0,0,1-1.866,1.057,2.068,2.068,0,0,1-.6-.085l-6.16-1.763v8a1.434,1.434,0,0,0,1.088,1.394l9.721,2.433a2.923,2.923,0,0,0,1.394,0l9.73-2.433A1.442,1.442,0,0,0,25.9,18.481v-8l-6.16,1.758A2.068,2.068,0,0,1,19.14,12.321ZM28.7,7.276,26.384,2.654a.734.734,0,0,0-.751-.4L14.388,3.688l4.123,6.839a.739.739,0,0,0,.832.328l8.9-2.541A.741.741,0,0,0,28.7,7.276ZM2.391,2.654.075,7.276A.733.733,0,0,0,.53,8.31l8.9,2.541a.739.739,0,0,0,.832-.328l4.128-6.835L3.137,2.254a.735.735,0,0,0-.746.4Z" transform="translate(0.003 -2.247)"/>';
                         echo '</svg>';
-                        echo '</td>';
+                        echo '</a></td>';
+                        echo '<td>'.$delivery_id.'</td>';
                         echo '<td>'.$name.'</td>';
-                        echo '<td>'.$id.'</td>';
+                        echo '<td>'.$package_id.'</td>';
                         echo '<td>'.$status.'</td>';
-                        echo '<td><a onclick="QR_set('.$id.')">';
+                        echo '<td><a onclick="QR_set('.$delivery_id.')">';
                         echo '    <svg xmlns="http://www.w3.org/2000/svg" width="19.673" height="19.673" viewBox="0 0 19.673 19.673">';
                         echo '        <path id="Icon_awesome-qrcode" data-name="Icon awesome-qrcode" d="M0,10.681H8.431V2.25H0ZM2.81,5.06h2.81v2.81H2.81Zm8.431-2.81v8.431h8.431V2.25Zm5.621,5.621h-2.81V5.06h2.81ZM0,21.923H8.431V13.491H0ZM2.81,16.3h2.81v2.81H2.81Zm15.457-2.81h1.405v5.621H15.457V17.707H14.052v4.216h-2.81V13.491h4.216V14.9h2.81Zm0,7.026h1.405v1.405H18.267Zm-2.81,0h1.405v1.405H15.457Z" transform="translate(19.673 21.923) rotate(180)"/>';
                         echo '    </svg>';
                         echo '</a></td>';
                         echo '</tr>';
+
+                        echo '<tr style="display:none">';
+                        echo '<td></td>';
+                        echo '<td></td>';
+                        echo '<td>'.$destination.'</td>';
+                        echo '<td><a>Track</a></td>';
+                        if($status != 'delivered' && $status != 'canceled')
+                            echo '<td><a href="./delivery_cancel_process.php?delivery_id='.$delivery_id.'" style="font-size: 100%;color: var(--grey-ff);background-color: var(--red);padding: 8px 20px;border-radius: 100px;">Cancel</a></td>';
+                        echo '</tr>';
+
+                        $index += 2;
                     }
 
                     if(isset($_GET['filter']) && $_GET['filter'] != "") {
                         $filter = strtolower($_GET['filter']);
 
-                        $q = "SELECT d.delivery_id, d.package_id, l.location_name, ds.name AS status
+                        $q = "SELECT d.delivery_id, d.package_id, l.location_name, ds.name AS status, getlocation(d.destination) AS destination
                           FROM delivery d, delivery_status ds, location l
                           WHERE d.sender_id = $userid
                             AND d.delivery_status = ds.deli_status_id
@@ -101,7 +115,7 @@
                             OR LOWER(ds.name) LIKE '%$filter%')
                           ORDER BY d.creation_date DESC;";
                     } else {
-                        $q = "SELECT d.delivery_id, d.package_id, l.location_name, ds.name AS status
+                        $q = "SELECT d.delivery_id, d.package_id, l.location_name, ds.name AS status, getlocation(d.destination) AS destination
                           FROM delivery d, delivery_status ds, location l
                           WHERE d.sender_id = {$userid}
                             AND d.delivery_status = ds.deli_status_id
@@ -115,7 +129,7 @@
                         return;
                     }
                     while($row = $result -> fetch_array()) { 
-                        generateDelivery($row['location_name'], $row['package_id'], $row['status']);   
+                        generateDelivery($row['location_name'], $row['delivery_id'], $row['package_id'], $row['status'], $row['destination']);
                     }
                 ?>
             </table>
@@ -149,6 +163,14 @@
         $('#qr-image').attr('src', ``);
     }
     QR_close();
+
+    function toggleContent(index) {
+        const target = $(`#delivery-table tr:nth-child(${index + 1})`);
+        if(target.is(':visible'))
+            target.hide();
+        else 
+            target.show();
+    }
 </script>
 
 </html>

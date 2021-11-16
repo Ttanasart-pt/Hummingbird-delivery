@@ -35,7 +35,7 @@
 <div class="header">
     <div class="menu">
         <a href="/Hummingbird_delivery/pricing.html">Pricing</a>
-        <a href="/Hummingbird_delivery/tracking.html">Tracking</a>
+        <a href="/Hummingbird_delivery/tracking.php">Tracking</a>
 
         <svg class="stroke light" xmlns="http://www.w3.org/2000/svg" width="2" height="56" viewBox="0 0 2 56">
             <line id="Line_2" data-name="Line 2" y2="56" transform="translate(1)" fill="none" stroke="#e6e6e6" stroke-width="2"/>
@@ -118,7 +118,7 @@
     </div>
 
     <div class="mode-toggle">
-        <a id="color" onclick="toggleDarkMode()"><div style="background-color: var(--accent);">Toggle light / dark mode</div></a>
+        <a id="color" onclick="toggleDarkMode()">D<div style="background-color: var(--accent);">Toggle light / dark mode</div></a>
         <div style="width: 16px;"></div>
 
         <a id="mode-u" class="user-mode blue"   onclick="setMode(this)">U<div class="blue"  >User view</div></a>
