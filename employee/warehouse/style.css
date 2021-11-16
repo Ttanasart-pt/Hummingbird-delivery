@@ -1,0 +1,29 @@
+.warehouse-grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    gap: 16px;
+}
+
+.warehouse-item {
+    width: 240px;
+    height: 320px;
+    
+    display: grid;
+    grid-template-rows: 200px auto auto auto;
+    padding: 20px;
+
+    background-color: var(--pure);
+    border-radius: 16px;
+    box-shadow: 0px 5px 10px 0px #00000025;
+}
+
+.warehouse-item *:first-child {
+    justify-self: center;
+    align-self: center;
+}
+
+.warehouse-item p, h2, h3{
+    margin: 0px;
+}

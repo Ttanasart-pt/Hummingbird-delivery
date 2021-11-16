@@ -13,7 +13,10 @@
 <head>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="/Hummingbird_delivery/header/color.js"></script>
+
     <script src="/Hummingbird_delivery/3d/three.js"></script>
+    <script src="/Hummingbird_delivery/3d/box.js"></script>
+    
     <script src="https://unpkg.com/html5-qrcode@2.0.9/dist/html5-qrcode.min.js"></script>
 
     <meta charset="UTF-8">
@@ -79,7 +82,7 @@
                     <p style="justify-self: center;">d</p>
                 </div>
                 <div id="preview" style="display: flex;justify-content: center;"></div>
-                <script src="/Hummingbird_delivery/3d/box.js"></script>
+                <script>const cube = generatePreview("preview", window.innerWidth / 2, window.innerWidth / 4);</script>
                 <br>
                 <div class="input-area">
                     <p>Package weight (g)</p>

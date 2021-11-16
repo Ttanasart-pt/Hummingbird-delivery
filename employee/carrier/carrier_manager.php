@@ -9,6 +9,15 @@
             echo $mysqli->error;
         }
     }
+
+    if(isset($_GET['deliver_delivery_id'])) {
+        $id = $_GET['deliver_delivery_id'];
+        $q = "CALL DeliveryComplete($id);";
+        $res = $mysqli -> query($q);
+        if(!$res) {
+            echo $mysqli->error;
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -55,7 +64,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="23.737" height="23.737" viewBox="0 0 23.737 23.737">
                 <path id="Icon_awesome-qrcode" data-name="Icon awesome-qrcode" d="M0,12.423H10.173V2.25H0ZM3.391,5.641H6.782V9.032H3.391ZM13.564,2.25V12.423H23.737V2.25Zm6.782,6.782H16.955V5.641h3.391ZM0,25.987H10.173V15.814H0Zm3.391-6.782H6.782V22.6H3.391Zm18.651-3.391h1.7V22.6H18.651V20.9h-1.7v5.087H13.564V15.814h5.087v1.7h3.391Zm0,8.478h1.7v1.7h-1.7Zm-3.391,0h1.7v1.7h-1.7Z" transform="translate(23.737 25.987) rotate(180)" fill="#fafafa"/>
             </svg>                  
-            <p>Scan</p>
+            <p id="qr-scan-txt">Receive package</p>
         </a>
 
         <br>
@@ -65,12 +74,22 @@
                 <div id="qr-reader"></div>
             </div>
         </div>
+
+        <div id="signature-block-parent" style="display: flex; justify-content:center;">
+            <div class="sig-block">
+                <canvas id="sig-canvas" width="620" height="160">This browser not support canvas</canvas>
+                <button id="sig-submitBtn" onclick="onSign()">Submit Signature</button>
+                <button id="sig-clearBtn">Clear Signature</button>
+            </div>
+        </div>
     </div>
 </body>
 
 <script>
     var showQR = false;
     $('#qr-reader-parent').hide();
+    $('#signature-block-parent').hide();
+
     function QRReader_open() {
         showQR = !showQR;
         if(showQR)
@@ -79,9 +98,24 @@
         $('#qr-reader-parent').hide();
     }
 
+    var curr_delivery;
     function onScanSuccess(decodedText, decodedResult) {
         // console.log(`Code scanned = ${decodedText}`, decodedResult);
-        window.location.href = `/Hummingbird_delivery/employee/carrier/carrier_manager.php?delivery_id=${decodedText}`;
+        switch(curr_shift) {
+            case 0 : 
+                window.location.href = `/Hummingbird_delivery/employee/carrier/carrier_manager.php?delivery_id=${decodedText}`;
+                $('#qr-reader-parent').hide();
+                break;
+            case 1 :
+                curr_delivery = decodedText;
+                $('#qr-reader-parent').hide();
+                $('#signature-block-parent').show();
+                break;
+            }
+    }
+
+    function onSign() {
+        window.location.href = `/Hummingbird_delivery/employee/carrier/carrier_manager.php?deliver_delivery_id=${curr_delivery}`;
     }
 
     var html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: 250 });
@@ -92,10 +126,140 @@
         curr_shift = (curr_shift + 1) % 2;
         
         switch(curr_shift) {
-            case 0 : $('#shift').html("To warehouse"); break;
-            case 1 : $('#shift').html("To destination"); break;
+            case 0 : 
+                    $('#shift').html("To warehouse"); 
+                    $('#qr-scan-txt').html("Receive package"); 
+                    break;
+            case 1 : 
+                    $('#shift').html("To destination"); 
+                    $('#qr-scan-txt').html("Deliver package"); 
+                    break;
         }
     }
+
+    (function () {
+        window.requestAnimFrame = (function (callback) {
+            return window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                window.msRequestAnimaitonFrame ||
+                function (callback) {
+                    window.setTimeout(callback, 1000 / 60);
+                };
+        })();
+
+        var canvas = document.getElementById("sig-canvas");
+        var ctx = canvas.getContext("2d");
+        // ctx.strokeStyle = "#222222";
+        ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--text');
+        ctx.lineWidth = 4;
+
+        var drawing = false;
+        var mousePos = {
+            x: 0,
+            y: 0
+        };
+        var lastPos = mousePos;
+
+        canvas.addEventListener("mousedown", function (e) {
+            drawing = true;
+            lastPos = getMousePos(canvas, e);
+        }, false);
+
+        canvas.addEventListener("mouseup", function (e) {
+            drawing = false;
+        }, false);
+
+        canvas.addEventListener("mousemove", function (e) {
+            mousePos = getMousePos(canvas, e);
+        }, false);
+
+        // Add touch event support for mobile
+        canvas.addEventListener("touchstart", function (e) {
+
+        }, false);
+
+        canvas.addEventListener("touchmove", function (e) {
+            var touch = e.touches[0];
+            var me = new MouseEvent("mousemove", {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(me);
+        }, false);
+
+        canvas.addEventListener("touchstart", function (e) {
+            mousePos = getTouchPos(canvas, e);
+            var touch = e.touches[0];
+            var me = new MouseEvent("mousedown", {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(me);
+        }, false);
+
+        canvas.addEventListener("touchend", function (e) {
+            var me = new MouseEvent("mouseup", {});
+            canvas.dispatchEvent(me);
+        }, false);
+
+        function getMousePos(canvasDom, mouseEvent) {
+            var rect = canvasDom.getBoundingClientRect();
+            return {
+                x: mouseEvent.clientX - rect.left,
+                y: mouseEvent.clientY - rect.top
+            }
+        }
+
+        function getTouchPos(canvasDom, touchEvent) {
+            var rect = canvasDom.getBoundingClientRect();
+            return {
+                x: touchEvent.touches[0].clientX - rect.left,
+                y: touchEvent.touches[0].clientY - rect.top
+            }
+        }
+
+        function renderCanvas() {
+            if (drawing) {
+                ctx.moveTo(lastPos.x, lastPos.y);
+                ctx.lineTo(mousePos.x, mousePos.y);
+                ctx.stroke();
+                lastPos = mousePos;
+            }
+        }
+
+        // Prevent scrolling when touching the canvas
+        document.body.addEventListener("touchstart", function (e) {
+            if (e.target == canvas) {
+                e.preventDefault();
+            }
+        }, false);
+        document.body.addEventListener("touchend", function (e) {
+            if (e.target == canvas) {
+                e.preventDefault();
+            }
+        }, false);
+        document.body.addEventListener("touchmove", function (e) {
+            if (e.target == canvas) {
+                e.preventDefault();
+            }
+        }, false);
+
+        (function drawLoop() {
+            requestAnimFrame(drawLoop);
+            renderCanvas();
+        })();
+
+        function clearCanvas() {
+            canvas.width = canvas.width;
+        }
+
+        var clearBtn = document.getElementById("sig-clearBtn");
+        clearBtn.addEventListener("click", function (e) {
+            clearCanvas();
+        }, false);
+    })();
 </script>
 </html>
 
